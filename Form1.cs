@@ -304,77 +304,96 @@ namespace M03.UF5.AC3
 
         private void persistir_Click(object sender, EventArgs ee)
         {
-            // Crear una instància del DAO
-            IConsumAiguaDAO consumaiguaDao = new ConsumAiguaDAO(NpgsqlUtils.OpenConnection());
 
-            // Exemple d'ús del DAO
-            ConsumAiguaDTO newContact = new ConsumAiguaDTO
-            {
-                Anys = 2021,
-                Codi_comarca = 1,
-                Comarca = "ALT CAMP, L'",
-                Poblacio = 20000,
-                Domestic_xarxa = 1000,
-                Activitats_economiques_i_fonts_propies = 2000,
-                Total = 3000,
-                Consum_domestic_per_capital = 4000
-            };
-
-            // Afegir un nou contacte
             try
             {
-                consumaiguaDao.AddConsumAiguaDTO(newContact);
-                MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        /*    //Recuperar el contacte per id
-            try
-            {
-                var contact = consumaiguaDao.GetConsumAiguaDTOById(3);
-                Console.WriteLine($"ID: {contact.Codi_comarca}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }*/
-/*
-            //Recuperar tots els contactes
-            var contacts = consumaiguaDao.GetAllConsumAiguaDTO();
-            Console.WriteLine($"ID | Nom  \t| Cognom");
-            foreach (var row in contacts)
-            {
-                Console.WriteLine($"{row.Codi_comarca}");
-            }
-
-            // Actualitzar un contacte   
-            try
-            {
-                ConsumAiguaDTO contact = new ConsumAiguaDTO
-                {
-
+                Dictionary<string, int> comarcaToCodiComarca = new Dictionary<string, int>()
+                {       
+                    { "ALT CAMP, L'", 1 },
+                    { "ALT EMPORDÀ, L'", 2 },
+                    { "ALT PENEDÈS, L'", 3 },
+                    { "ALT URGELL, L'", 4 },
+                    { "ALTA RIBAGORÇA, L'", 5 },
+                    { "ANOIA, L'", 6 },
+                    { "BAGES, EL", 7 },
+                    { "BAIX CAMP, EL", 8 },
+                    { "BAIX EBRE, EL", 9 },
+                    { "BAIX EMPORDÀ, EL", 10 },
+                    { "BAIX LLOBREGAT, EL", 11 },
+                    { "BAIX PENEDÈS, EL", 12 },
+                    { "BARCELONÈS, EL", 13 },
+                    { "BERGUEDÀ, EL", 14 },
+                    { "CERDANYA, LA", 15 },
+                    { "CONCA DE BARBERÀ, LA", 16 },
+                    { "GARRAF, EL", 17 },
+                    { "GARRIGUES, LES", 18 },
+                    { "GARROTXA, LA", 19 },
+                    { "GIRONÈS, EL", 20 },
+                    { "MARESME, EL", 21 },
+                    { "MONTSIÀ, EL", 22 },
+                    { "NOGUERA, LA", 23 },
+                    { "OSONA", 24 },
+                    { "PALLARS JUSSÀ, EL", 25 },
+                    { "PALLARS SOBIRÀ, EL", 26 },
+                    { "PLA D'URGELL, EL", 27 },
+                    { "PLA DE L'ESTANY, EL", 28 },
+                    { "PRIORAT, EL", 29 },
+                    { "RIBERA D'EBRE, LA", 30 },
+                    { "RIPOLLÈS, EL", 31 },
+                    { "SEGARRA, LA", 32 },
+                    { "SEGRIÀ, EL", 33 },
+                    { "SELVA, LA", 34 },
+                    { "SOLSONÈS, EL", 35 },
+                    { "TARRAGONÈS, EL", 36 },
+                    { "TERRA ALTA", 37 },
+                    { "URGELL, L'", 38 },
+                    { "VAL D'ARAN, LA", 39 },
+                    { "VALLÈS OCCIDENTAL, EL", 40 },
+                    { "VALLÈS ORIENTAL, EL", 41 },
+                    { "Moianès", 42 }
                 };
-                consumaiguaDao.UpdateConsumAiguaDTO(contact);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
 
-            // Eliminar un contacte
+                IConsumAiguaDAO consumaiguaDao = new ConsumAiguaDAO(NpgsqlUtils.OpenConnection());
 
-            try
-            {
-                consumaiguaDao.DeleteConsumAiguaDTO(8);
+                int year = Int32.Parse(anyBox.Text);
+                int poblacio = Int32.Parse(poblacioBox.Text);
+                double domesticXarxa = Double.Parse(domesticBox.Text);
+                double activitatsEconomiques = Double.Parse(activitatsBox.Text);
+                double total = Double.Parse(totalBox.Text);
+                double consumPerCapita = Double.Parse(consumBox.Text);
+                string codiComarca = comarcaBox.Text;
+                int num = num = comarcaToCodiComarca[codiComarca];
+
+                ConsumAiguaDTO newContact = new ConsumAiguaDTO
+                {
+                    Anys = year,
+                    Codi_comarca = num,
+                    Comarca = codiComarca,
+                    Poblacio = poblacio,
+                    Domestic_xarxa = domesticXarxa,
+                    Activitats_economiques_i_fonts_propies = activitatsEconomiques,
+                    Total = total,
+                    Consum_domestic_per_capital = consumPerCapita
+                };
+
+                try
+                {
+                    consumaiguaDao.AddConsumAiguaDTO(newContact);
+                    MessageBox.Show("Datos guardados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                }
+
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
-            }*/
+                MessageBox.Show("Llena todos los campos CORRECTAMENTE antes de persistir los datos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+       
         }
     }
 }
